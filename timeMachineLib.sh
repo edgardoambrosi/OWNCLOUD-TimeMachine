@@ -24,8 +24,9 @@
 #fa si che tutto il logging venga ridirottato sul file specificato.
 #http://urbanautomaton.com/blog/2014/09/09/redirecting-bash-script-output-to-syslog/
 #prelevo il nome di questo script e lo passo allo script di logging che lo usera come TAG
+BASENAME=$(dirname $0)
 THIS_NAME=$(echo $(basename $0))
-exec 1> >(/home/ambrosi/Desktop/DROPBOX/Dropbox/Scripts/timeMachine/logging/loggingLib $THIS_NAME $1) 2>&1
+exec 1> >($BASENAME/logging/loggingLib $THIS_NAME $1) 2>&1
 
 echo PID OF $THIS_NAME is: $$
 
@@ -36,7 +37,7 @@ echo PID OF $THIS_NAME is: $$
 #err "EDGARDO"
 #info "EDGARDO"
 ####################################################
-source /home/ambrosi/Desktop/DROPBOX/Dropbox/Scripts/timeMachine/ansi-color/echoColor.sh
+source $BASENAME/ansi-color/echoColor.sh
 
 unset pipe
 unset PID_INTERVALLO

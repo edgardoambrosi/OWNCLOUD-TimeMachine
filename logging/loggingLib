@@ -4,13 +4,14 @@
 #/path/to/timeMachineLib.sh alfrescodev /home/ambrosi/Desktop/AmbienteSviluppo/AlfrescoDev/ 30 >/dev/null 2>&1
 #fa si che tutto il logging venga ridirottato sul file specificato.
 #http://urbanautomaton.com/blog/2014/09/09/redirecting-bash-script-output-to-syslog/
+BASENAME=$(dirname $0)
 THIS_NAME=$(echo $(basename $0)|tr '[:lower:]' '[:upper:]')
 PROFILO=$2
 TAG=$(echo $1|tr '[:lower:]' '[:upper:]')
 exec 1> >(cat - >>/var/log/timeMachine/timemachine_$PROFILO.log) 2>&1
 
-source /home/ambrosi/Desktop/DROPBOX/Dropbox/Scripts/timeMachine/ansi-color/echoColor.sh
-source /home/ambrosi/Desktop/DROPBOX/Dropbox/Scripts/timeMachine/logging/rules
+source $BASENAME/../ansi-color/echoColor.sh
+source $BASENAME/rules
 
 echo $THIS_NAME: PID OF loggingLib is: $$
 
@@ -21,7 +22,7 @@ function write_log {
 #TODO:regole per il filtering da specificare in un foglio di elenco esterno
 function filter_log {
 		#reload rules per ricaricare nuove regole
-		source /home/ambrosi/Desktop/DROPBOX/Dropbox/Scripts/timeMachine/logging/rules
+		source $BASENAME/rules
 
 		LINE="$1"
 		LINE_OUT="$LINE"

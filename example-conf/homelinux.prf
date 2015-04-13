@@ -1,1 +1,41 @@
-/home/ambrosi/.unison/homelinux.prf
+# Unison preferences
+auto = true
+batch = true
+force = /home/ambrosi
+ignore = Path Desktop/Dev
+ignore = Path Desktop/AmbienteSviluppo
+ignore = Path Desktop/DevArea
+ignore = Path Desktop/DROPBOX
+ignore = Path Desktop/GoogleDrive
+ignore = Path Desktop/DROPBOX-PERSONAL
+ignore = Path Desktop/HOMEWINDOWS
+ignore = Path Desktop/MemopalDrive
+ignore = Path .unison
+ignore = Path .config/google-chrome
+ignore = Path .cache/google-chrome
+
+ignore = Name .Memopal/Memopalctrlpipe
+ignore = Name .Memopal/Memopalshellextpipe
+ignore = Name .TrueCrypt/.show-request-queue
+ignore = Name .VeraCrypt/.show-request-queue
+ignore = Name .cache/gnome-system-monitor.ambrosi.3945249483
+ignore = Name .copy/copyagent-overlay.socket
+ignore = Name .dropbox-personale/.dropbox/command_socket
+ignore = Name .dropbox-personale/.dropbox/iface_socket
+ignore = Name .dropbox-sviluppo/.Memopal/Memopalctrlpipe
+ignore = Name .dropbox-sviluppo/.Memopal/Memopalshellextpipe
+ignore = Name .dropbox-sviluppo/.TrueCrypt/.show-request-queue
+ignore = Name .dropbox-sviluppo/.dropbox/command_socket
+ignore = Name .dropbox-sviluppo/.dropbox/iface_socket
+ignore = Name .dropbox/command_socket
+ignore = Name .dropbox/iface_socket
+ignore = Name .xine/session.0
+
+
+label = Sincronizza volume TC della home linux di ambrosi
+#repeat = 30
+root = /home/ambrosi
+root = ssh://ambrosi@ambrosi-fisico.ddns.net///media/EDGARDO/BACKUP/CONTINUOS/CONTINUOS_FOLDERS/OWNCLOUD/HOMELINUX/ambrosi/
+sshargs = -C
+
+logfile=/var/log/unison/homelinux.log

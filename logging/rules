@@ -1,0 +1,5 @@
+#!/bin/bash
+
+FILTERS_OUT=("^.*timeMachineLib\.sh.*$" )
+
+FILTERS_IN=("Operation not permitted" "Copying properties" "Updating file"  "Failed:" )

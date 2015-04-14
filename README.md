@@ -24,6 +24,10 @@ The unison parameter FORCE is mandatory.
 Logging: The script at now write on local File system 2 temporary files, which are:
 
 A FIFO file type in 
+```
     /tmp/"UNISON PROFILE"_pipe 
+```    
 and a logging file 
+```
     /var/log/timeMachine/timemachine_"UNISON PROFILE".log
+```    

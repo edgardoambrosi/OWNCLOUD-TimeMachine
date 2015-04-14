@@ -15,13 +15,14 @@ The script wants to be a stryctly integration between inotify+unison vs OWNCLOUD
 
 For such reason the name of a unison profile represents the script' parameter.
 
-Usage:
+##Usage:
 Mandatory: define and configur a Unison profile.
 The unison parameter FORCE is mandatory.
-
+```
 /path/to//OWNCLOUD-TimeMachine/timeMachineLib.sh "UNISON PROFILE"
-
-Logging: The script at now write on local File system 2 temporary files, which are:
+```
+##Logging: 
+The script at now write on local File system 2 temporary files, which are:
 
 A FIFO file type in 
 ```

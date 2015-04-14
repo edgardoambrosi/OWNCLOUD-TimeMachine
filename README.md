@@ -15,6 +15,11 @@ The script wants to be a stryctly integration between inotify+unison vs OWNCLOUD
 
 For such reason the name of a unison profile represents the script' parameter.
 
+
+##Installation:
+
+##settings:
+
 ##Usage:
 Mandatory: define and configure a Unison profile.
 The unison parameter FORCE is mandatory.

@@ -16,7 +16,7 @@ The script wants to be a stryctly integration between inotify+unison vs OWNCLOUD
 For such reason the name of a unison profile represents the script' parameter.
 
 ##Usage:
-Mandatory: define and configur a Unison profile.
+Mandatory: define and configure a Unison profile.
 The unison parameter FORCE is mandatory.
 ```
 /path/to//OWNCLOUD-TimeMachine/timeMachineLib.sh "UNISON PROFILE"

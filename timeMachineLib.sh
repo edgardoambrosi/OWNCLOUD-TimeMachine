@@ -16,7 +16,7 @@
 #TODO:creare una interfaccia grafica per le impostazioni, ad esempio una utile opzione potrebbe essere la seguente:
 #			  - quando unison dice che non riesce a sincronizzare un file, si potrebbe offrire la possibilità con un click di metterlo fra quelli non monitorati da inotify e non sincronizzati da unison
 #TODO:Scrivere una documentazione accurata su come sono combinati unison e inotifywait e sulla logica dello script,
-
+ 
 
 #NOTA: La seguente linea significa che ridirieziono lo stderr su lo stdout 2>&1 e lo stout 1> del presente script sul processo di subshell che apro con () e che ha in esecuzione il comando cat dallo stdinput - che appende sul file /var/log/timeMachine/timemachine.log.
 #Questo comando unito con la sintassi >/dev/null 2>&1 appesa alla escuzione del presente script es:
@@ -205,8 +205,12 @@ function notifica {
 
 	#attenzione lo switch -r in inotifywait deve essere tolto quando si usa lo swith --exclude. la semantica di exclude quando viene utilizzato è:
 	#guarda tutto tranne quello che viene escluso.
+	#attenzione: al posto dello switch -m usiamo while true. Entrambi i metodi fanno si che il monitoraggio non termini, ma lo switch sembra avere
+	#comportamenti anomali.
+	while true;
+	do
 	if [ ! -z "$exclude" ];then 
-		inotifywait -m $exclude  $path|
+		inotifywait $exclude  $path|
 		while read event
 		do
 				if [[ $(pipe_exists) == false ]]
@@ -220,7 +224,7 @@ function notifica {
 		done 
 	fi
 	if [ -z "$exclude" ];then 
-		inotifywait -m -r  $path|
+		inotifywait -r  $path|
 		while read event
 		do
 				if [[ $(pipe_exists) == false ]]
@@ -233,7 +237,7 @@ function notifica {
 				fi
 		done 
 	fi
-
+	done
 }
 
 

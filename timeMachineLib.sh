@@ -16,7 +16,7 @@
 #TODO:creare una interfaccia grafica per le impostazioni, ad esempio una utile opzione potrebbe essere la seguente:
 #			  - quando unison dice che non riesce a sincronizzare un file, si potrebbe offrire la possibilità con un click di metterlo fra quelli non monitorati da inotify e non sincronizzati da unison
 #TODO:Scrivere una documentazione accurata su come sono combinati unison e inotifywait e sulla logica dello script,
- 
+
 
 #NOTA: La seguente linea significa che ridirieziono lo stderr su lo stdout 2>&1 e lo stout 1> del presente script sul processo di subshell che apro con () e che ha in esecuzione il comando cat dallo stdinput - che appende sul file /var/log/timeMachine/timemachine.log.
 #Questo comando unito con la sintassi >/dev/null 2>&1 appesa alla escuzione del presente script es:
@@ -26,7 +26,13 @@
 #prelevo il nome di questo script e lo passo allo script di logging che lo usera come TAG
 BASENAME=$(dirname $0)
 THIS_NAME=$(echo $(basename $0))
-exec 1> >($BASENAME/logging/loggingLib $THIS_NAME $1) 2>&1
+if [ ! -z "$1" ]
+then
+	exec 1> >($BASENAME/logging/loggingLib $THIS_NAME $1) 2>&1
+else
+	info 'Utilizzo: "/path/to/timemachineLib.sh \"profilo\"'
+	exit
+fi
 
 echo PID OF $THIS_NAME is: $$
 
@@ -47,17 +53,11 @@ unset force
 unset interval
 unset excludeWatch
 
-#profilo unison
 profilo=$1
-#path da monitorare e sincronizzare
 path=""
-#force
 force=""
-#interval=30
 interval="" 
-#excludeWatch
 excludeWatch=""
-
 
 pipe=/tmp/$profilo'_pipe'
 trap "rm -f $pipe" EXIT
@@ -89,20 +89,18 @@ function readingUnisonProfile {
 	for i in `cat $(locate $profilo.prf)|grep ignore|sed 's/\(.*Name\)//g'`;
 	do 
 		excludeWatch=$excludeWatch' --exclude '$i
-		#info "$excludeWatch"
 	done
 	for i in `cat $(locate $profilo.prf)|grep force|sed 's/\(.*force\s*=\s*\)//g'`;
 	do 
 		force=$i
 		path=$i
-		#info "$force"
+		break
 	done
 	for i in `cat $(locate $profilo.prf)|grep repeat|sed 's/\(.*repeat\s*=\s*\)//g'`;
 	do 
 		interval=$i
-		#info "$interval"
+		break
 	done
-
 }
 
 function clear_pipe {
@@ -205,12 +203,8 @@ function notifica {
 
 	#attenzione lo switch -r in inotifywait deve essere tolto quando si usa lo swith --exclude. la semantica di exclude quando viene utilizzato è:
 	#guarda tutto tranne quello che viene escluso.
-	#attenzione: al posto dello switch -m usiamo while true. Entrambi i metodi fanno si che il monitoraggio non termini, ma lo switch sembra avere
-	#comportamenti anomali.
-	while true;
-	do
 	if [ ! -z "$exclude" ];then 
-		inotifywait $exclude  $path|
+		inotifywait -m $exclude  $path|
 		while read event
 		do
 				if [[ $(pipe_exists) == false ]]
@@ -224,7 +218,7 @@ function notifica {
 		done 
 	fi
 	if [ -z "$exclude" ];then 
-		inotifywait -r  $path|
+		inotifywait -m -r  $path|
 		while read event
 		do
 				if [[ $(pipe_exists) == false ]]
@@ -237,7 +231,7 @@ function notifica {
 				fi
 		done 
 	fi
-	done
+
 }
 
 

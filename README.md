@@ -27,9 +27,9 @@ The unison parameter FORCE is mandatory.
 /path/to//OWNCLOUD-TimeMachine/timeMachineLib.sh "UNISON PROFILE"
 ```
 ##Logging: 
-The script at now write on local File system 2 temporary files, which are:
+The script writes on local file system 2 temporary files, which are:
 
-A FIFO file type in 
+A FIFO file type located in /tmp folder 
 ```
     /tmp/"UNISON PROFILE"_pipe 
 ```    

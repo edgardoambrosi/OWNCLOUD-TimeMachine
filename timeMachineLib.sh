@@ -4,7 +4,7 @@
 #CARATTERISTICA:utilizzare completamente le informazioni presenti nel profilo unison per estrapolare i parametri anche per inotifywait,
 
 #DIPENDENZE: 
-#inotify, unison, ansi-color 
+#inotify, unison, ansi-color, csync-owncloud
 
 #UTILIZZO: esempio di come si esegue il presente script è il seguente:
 #		-	/home/ambrosi/Desktop/DROPBOX/Dropbox/Scripts/timeMachineLib.sh alfrescodev /home/ambrosi/Desktop/AmbienteSviluppo/AlfrescoDev/ 30
@@ -17,20 +17,21 @@
 #			  - quando unison dice che non riesce a sincronizzare un file, si potrebbe offrire la possibilità con un click di metterlo fra quelli non monitorati da inotify e non sincronizzati da unison
 #TODO:Scrivere una documentazione accurata su come sono combinati unison e inotifywait e sulla logica dello script,
 
-
 #NOTA: La seguente linea significa che ridirieziono lo stderr su lo stdout 2>&1 e lo stout 1> del presente script sul processo di subshell che apro con () e che ha in esecuzione il comando cat dallo stdinput - che appende sul file /var/log/timeMachine/timemachine.log.
 #Questo comando unito con la sintassi >/dev/null 2>&1 appesa alla escuzione del presente script es:
 #/path/to/timeMachineLib.sh alfrescodev /home/ambrosi/Desktop/AmbienteSviluppo/AlfrescoDev/ 30 >/dev/null 2>&1
 #fa si che tutto il logging venga ridirottato sul file specificato.
 #http://urbanautomaton.com/blog/2014/09/09/redirecting-bash-script-output-to-syslog/
 #prelevo il nome di questo script e lo passo allo script di logging che lo usera come TAG
+
+
 BASENAME=$(dirname $0)
 THIS_NAME=$(echo $(basename $0))
 if [ ! -z "$1" ]
 then
 	exec 1> >($BASENAME/logging/loggingLib $THIS_NAME $1) 2>&1
 else
-	info 'Utilizzo: "/path/to/timemachineLib.sh \"profilo\"'
+	echo 'Utilizzo: "/path/to/timemachineLib.sh \"profilo\"'
 	exit
 fi
 
@@ -49,15 +50,20 @@ unset pipe
 unset PID_INTERVALLO
 unset profilo 
 unset path
+unset owncloud_path
 unset force
 unset interval
 unset excludeWatch
 
 profilo=$1
 path=""
+owncloud_path=""
 force=""
 interval="" 
 excludeWatch=""
+
+UNISON_COMMAND="$(which unison) $profilo"
+CSYNC_OWNCLOUD_COMMAND="$(which csync)"
 
 pipe=/tmp/$profilo'_pipe'
 trap "rm -f $pipe" EXIT
@@ -96,6 +102,11 @@ function readingUnisonProfile {
 		path=$i
 		break
 	done
+	for i in `cat $(locate $profilo.prf)|grep owncloud|sed 's/\(.*root\s*=\s*\)//g'`;
+	do
+		owncloud_path=$i
+		echo $owncloud_path
+	done
 	for i in `cat $(locate $profilo.prf)|grep repeat|sed 's/\(.*repeat\s*=\s*\)//g'`;
 	do 
 		interval=$i
@@ -130,7 +141,8 @@ function setInterval {
 	#arrivato il timeout di n secondi eseguo il comando
 	echo 
 	info "...avvio chiusura sincronizzazione."
-	unison $profilo
+	#$UNISON_COMMAND
+	$CSYNC_OWNCLOUD_COMMAND -v $force $owncloud_path
 }
 
 function clearInterval {
@@ -172,7 +184,8 @@ function attua {
 
  			if [ "$timespent" -gt "$interval" ];then 
 				echo "Sono trascorsi  $(err $timespent) secondi dalla ultima sincronizzazione"
-				unison $profilo
+				#$UNISON_COMMAND
+				$CSYNC_OWNCLOUD_COMMAND -v $force $owncloud_path
 				last_sync=$(date +"%s")
 				continue
 			fi

@@ -64,6 +64,7 @@ excludeWatch=""
 
 UNISON_COMMAND="$(which unison) $profilo"
 CSYNC_OWNCLOUD_COMMAND="$(which csync)"
+SYNC_TOOL=""
 
 pipe=/tmp/$profilo'_pipe'
 trap "rm -f $pipe" EXIT
@@ -88,6 +89,7 @@ function checkParameters {
 }
 
 function readingUnisonProfile {
+	SYNC_TOOL=$UNISON_COMMAND
 	for i in `cat $(locate $profilo.prf)|grep ignore|sed 's/\(.*Path\)//g'`;
 	do 
 		excludeWatch=$excludeWatch' --exclude '$i
@@ -105,7 +107,7 @@ function readingUnisonProfile {
 	for i in `cat $(locate $profilo.prf)|grep owncloud|sed 's/\(.*root\s*=\s*\)//g'`;
 	do
 		owncloud_path=$i
-		echo $owncloud_path
+		SYNC_TOOL=$CSYNC_OWNCLOUD_COMMAND  -v $force $owncloud_path
 	done
 	for i in `cat $(locate $profilo.prf)|grep repeat|sed 's/\(.*repeat\s*=\s*\)//g'`;
 	do 
@@ -141,8 +143,7 @@ function setInterval {
 	#arrivato il timeout di n secondi eseguo il comando
 	echo 
 	info "...avvio chiusura sincronizzazione."
-	#$UNISON_COMMAND
-	$CSYNC_OWNCLOUD_COMMAND -v $force $owncloud_path
+	$SYNC_TOOL
 }
 
 function clearInterval {
@@ -184,8 +185,7 @@ function attua {
 
  			if [ "$timespent" -gt "$interval" ];then 
 				echo "Sono trascorsi  $(err $timespent) secondi dalla ultima sincronizzazione"
-				#$UNISON_COMMAND
-				$CSYNC_OWNCLOUD_COMMAND -v $force $owncloud_path
+				$SYNC_TOOL
 				last_sync=$(date +"%s")
 				continue
 			fi

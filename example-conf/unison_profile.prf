@@ -1,4 +1,6 @@
 # Unison preferences
+label = Sincronizza con Unison
+
 auto = true
 batch = true
 ignore = Path Desktop/Dev
@@ -30,17 +32,13 @@ ignore = Name .dropbox/command_socket
 ignore = Name .dropbox/iface_socket
 ignore = Name .xine/session.0
 
-
-label = Sincronizza volume TC della home linux
 #repeat = 30
+force = /path/to/folder
 root = /path/to/folder
 
 #in caso di schema ssh lo script utilizzerà unison
-root = ssh://username@hostname///path/to/OWNCLOUD/mirroring/folder
+#root = ssh://username@hostname///path/to/OWNCLOUD/mirroring/folder
 #in caso di schema owncloud lo script utilizzerà il modulo csync owncloud 
-root = owncloud://username@hostname///owncloud/remote.php/path/to/folder/
+#root = owncloud://username@hostname///owncloud/remote.php/path/to/folder/
 
-force = /path/to/folder
-sshargs = -C
-
-logfile=/var/log/unison/homelinux.log
+logfile=/var/log/unison/unison_profile.log

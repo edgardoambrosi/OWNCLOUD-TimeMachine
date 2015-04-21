@@ -11,18 +11,24 @@ unison file synchronizer: http://www.cis.upenn.edu/~bcpierce/unison/
 and some very useful open source code, such as:
 ansi-color: https://github.com/ali5ter/ansi-color
 
-The script wants to be a stryctly integration between inotify+unison vs OWNCLOUD server. 
+The script wants to be a stryctly integration between inotify+unison+csync vs OWNCLOUD server and all remote ssh/rsh storages. 
 
 For such reason the name of a unison profile represents the script' parameter.
 
+The unison profile is used more widely over the runtime of the script.
 
 ##Installation:
 
 ##settings:
 
 ##Usage:
-Mandatory: define and configure a Unison profile.
-The unison parameter FORCE is mandatory.
+Mandatory: Must be define and configure a Unison profile.
+The unison parameter FORCE is mandatory as well as an IGNORE must be provided for the following files:
+```
+.csync_journal.db.ctmp and  .csync_journal.db
+```
+That is, when the sync activity is versus OWNCLOUD server we do not want to monitor and sync the above files.
+
 ```
 /path/to//OWNCLOUD-TimeMachine/timeMachineLib.sh "UNISON PROFILE"
 ```

@@ -89,6 +89,7 @@ function checkParameters {
 }
 
 function readingUnisonProfile {
+	#default il comando di sincronizzazione è unison
 	SYNC_TOOL=$UNISON_COMMAND
 	for i in `cat $(locate $profilo.prf)|grep ignore|sed 's/\(.*Path\)//g'`;
 	do 
@@ -107,6 +108,7 @@ function readingUnisonProfile {
 	for i in `cat $(locate $profilo.prf)|grep owncloud|sed 's/\(.*root\s*=\s*\)//g'`;
 	do
 		owncloud_path=$i
+		#se il protocollo è owncloud allora viene usato csync
 		SYNC_TOOL=$CSYNC_OWNCLOUD_COMMAND  -v $force $owncloud_path
 	done
 	for i in `cat $(locate $profilo.prf)|grep repeat|sed 's/\(.*repeat\s*=\s*\)//g'`;

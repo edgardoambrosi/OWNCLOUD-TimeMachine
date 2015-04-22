@@ -2,4 +2,4 @@
 
 FILTERS_OUT=("^.*timeMachineLib\.sh.*$" )
 
-FILTERS_IN=("Operation not permitted" "Copying properties" "Updating file"  "Failed:" )
+FILTERS_IN=("Operation not permitted" "Copying properties" "Updating file"  "Failed:" "Input\/output error" "CLOSE_NOWRITE" "CLOSE" "ISDIR" "OPEN" "ACCESS")

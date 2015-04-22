@@ -41,7 +41,7 @@ function filter_log {
 		#FILTERS_IN=("Operation not permitted" "Copying properties" "Updating file"  "Failed:" )
 		for FILTER in "${FILTERS_IN[@]}";
 		do
-			LINE_IN=$(echo $LINE|grep -i "${FILTER}")
+			LINE_IN=$(echo $LINE|grep "${FILTER}")
 			if [ ! -z "$LINE_IN" ]
 			then
 				echo $TAG: $(err "$LINE_IN")

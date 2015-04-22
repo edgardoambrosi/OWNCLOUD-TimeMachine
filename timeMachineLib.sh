@@ -54,6 +54,7 @@ unset owncloud_path
 unset force
 unset interval
 unset excludeWatch
+unset excludeSync
 
 profilo=$1
 path=""
@@ -61,6 +62,7 @@ owncloud_path=""
 force=""
 interval="" 
 excludeWatch=""
+excludeSync=""
 
 UNISON_COMMAND="$(which unison) $profilo"
 CSYNC_OWNCLOUD_COMMAND="$(which csync)"
@@ -91,13 +93,15 @@ function checkParameters {
 function readingUnisonProfile {
 	#default il comando di sincronizzazione è unison
 	SYNC_TOOL=$UNISON_COMMAND
-	for i in `cat $(locate $profilo.prf)|grep ignore|sed 's/\(.*Path\)//g'`;
+	for i in `cat $(locate $profilo.prf)|grep "ignore\s* =\s* Path"|sed 's/\(.*Path\)//g'`;
 	do 
 		excludeWatch=$excludeWatch' --exclude '$i
+		excludeSync=$excludeSync':'$i 
 	done
-	for i in `cat $(locate $profilo.prf)|grep ignore|sed 's/\(.*Name\)//g'`;
+	for i in $(cat $(locate $profilo.prf)|grep "ignore\s* =\s* Name"|sed 's/\(.*Name\)//g');
 	do 
 		excludeWatch=$excludeWatch' --exclude '$i
+		excludeSync=$excludeSync':'$i
 	done
 	for i in `cat $(locate $profilo.prf)|grep force|sed 's/\(.*force\s*=\s*\)//g'`;
 	do 
@@ -109,7 +113,9 @@ function readingUnisonProfile {
 	do
 		owncloud_path=$i
 		#se il protocollo è owncloud allora viene usato csync
-		SYNC_TOOL=$CSYNC_OWNCLOUD_COMMAND  -v $force $owncloud_path
+		#viene prima eseguito il comando csync per escludere i file che non si debbono sincronizzare
+		$CSYNC_OWNCLOUD_COMMAND --exclude-file=$excludeSync -v $force $owncloud_path
+		SYNC_TOOL="$CSYNC_OWNCLOUD_COMMAND  -v $force $owncloud_path"
 	done
 	for i in `cat $(locate $profilo.prf)|grep repeat|sed 's/\(.*repeat\s*=\s*\)//g'`;
 	do 
@@ -145,6 +151,7 @@ function setInterval {
 	#arrivato il timeout di n secondi eseguo il comando
 	echo 
 	info "...avvio chiusura sincronizzazione."
+	echo $SYNC_TOOL
 	$SYNC_TOOL
 }
 
@@ -228,6 +235,7 @@ function notifica {
 					break
 				else
 					timestamp=$(date +"%s")
+					warn "$event"
 					echo $timestamp >$pipe
 				fi
 		done 
@@ -242,6 +250,7 @@ function notifica {
 					break
 				else
 					timestamp=$(date +"%s")
+					warn "$event"
 					echo $timestamp >$pipe
 				fi
 		done 
